@@ -6,7 +6,7 @@
 </head>
 <body>
     <h2>시청자 페이지</h2>
-    <video id="remoteVideo" autoplay playsinline></video>
+    <video id="remoteVideo" autoplay playsinline muted></video> <!-- muted 추가 : muted가 없으면 Chrome/Edge/Firefox가 자동 재생을 막아서 화면이 안 나올 수 있음 -->
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
@@ -26,8 +26,19 @@
         })
 
         socket.on("candidate", (candidate) => {
-            pc.addIceCandidate(new RTCIceCandidate(candidate));
+             if(candidate) {
+                    pc.addIceCandidate(new RTCIceCandidate(candidate))
+                    .catch(e => console.error("ICE candidate 추가 실패:", e));
+            }
         })
+
+        pc.oniceconnectionstatechange = () => {
+            console.log("시청자 ICE 상태:", pc.iceConnectionState);
+        };
+
+        // 시청자가 늦게 들어왔을 때 offer 요청
+        socket.emit("requestOffer");
+
     </script>
 </body>
 </html>

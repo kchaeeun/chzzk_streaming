@@ -1,0 +1,1 @@
+1. broadcaster를 먼저 키고 viewer 페이지를 켜야함

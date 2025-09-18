@@ -26,6 +26,8 @@ io.on("connection", (socket) => {
     socket.on("disconnect", (data) => {
         console.log("user disconnected", socket.id);
     });
+
+    socket.on("requestOffer", () => socket.broadcast.emit("requestOffer"));
 });
 
 server.listen(3000, () => {
