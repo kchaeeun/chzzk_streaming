@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Viewer</title>
+</head>
+<body>
+    <h2>시청자 페이지</h2>
+    <video id="remoteVideo" autoplay playsinline></video>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const pc = new RTCPeerConnection();
+
+        pc.ontrack = event => {
+            document.getElementById("remoteVideo").srcObject = event.streams[0];
+        };
+
+        socket.on("offer", (offer) => {
+            pc.setRemoteDescription(new RTCSessionDescription(offer))
+            .then(() => pc.createAnswer())
+            .then(answer => pc.setLocalDescription(answer))
+            .then(() => {
+                socket.emit("answer", pc.localDescription);
+            })
+        })
+
+        socket.on("candidate", (candidate) => {
+            pc.addIceCandidate(new RTCIceCandidate(candidate));
+        })
+    </script>
+</body>
+</html>

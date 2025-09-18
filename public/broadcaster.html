@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Broadcaster</title>
+</head>
+<body>
+    <h2>Chzzk</h2>
+    <video id="localVideo" autoplay playsinline muted></video>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const pc = new RTCPeerConnection();
+
+        // 방송자 카메라/마이크 캡쳐
+        navigator.mediaDevices.getUserMedia({video: true, audio: true})
+        .then(stream => {
+            document.getElementById("localVideo").srcObject = stream;
+            stream.getTracks().forEach(track => pc.addTrack(track, stream));
+        });
+
+        // ICE 후보 전송
+        pc.onicecandidate = event => {
+            if (event.candidate) {
+                socket.emit("candidate", event.candidate);
+            }
+        };
+
+        // 방송자가 offer 생성
+        pc.createOffer()
+        .then(offer => pc.setLocalDescription(offer))
+        .then(() => {
+            socket.emit("offer", pc.localDescription);
+        });
+
+        // 시청자가 answer 보냈을 때 (아니 계속 틀렸음... 받아야 되는 임)
+        socket.on("answer", (answer) => {
+            pc.setRemoteDescription(new RTCSessionDescription(answer));     
+        });
+
+        socket.on("candidate", (candidate) => {
+            pc.addIceCandidate(new RTCIceCandidate(candidate)); // ICE는 가능한 모든 연결 경로(네트워크 후보, Candidate) 를 찾아서 가장 잘 통하는 경로로 연결해 주는 역할을 함
+        });
+    </script>
+</body>
+</html>
