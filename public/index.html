@@ -1,0 +1,43 @@
+<!--public/index.html-->
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Chzzk - Player + Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif; margin: 16px;
+        }
+        #container { display: flex; gap: 16px;}
+        #player {width: 720px;}
+        #chat {width: 360px; border: 1px solid #ccc; padding: 8px; height: 480px; display: flex; flex-direction: column;}
+        #message {flex: 1; overflow: auto; margin-bottom: 8px;}
+        #input {display: flex; gap: 8px;}
+        video { width: 100%; height: auto; background:#000;}
+        .system {color: #888; font-size: 13px;}
+        .message {margin: 6px 0;}
+        .nick { font-weight: 700; margin-right: 6px;}
+    </style>
+</head>
+<body>
+    <h2>Chzzk Clone - Player + Chat</h2>
+    <div id="container">
+        <div id="player">
+            <video id="video" controls autoplay muted playsinline></video>
+            <p>HLS Source: <span id="m3u8"></span></p>
+        </div>
+
+        <div id="chat">
+            <div id="message"></div>
+            <div id="input">
+                <input id="nick" placeholder="닉네임" style="width:30%"/>
+                <input id="msg" placeholder="메시지 입력" style="width:55%"/>
+                <button id="send">Send</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="/client.js"></script>
+</body>
+</html>
