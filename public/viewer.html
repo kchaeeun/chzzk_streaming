@@ -6,6 +6,7 @@
 </head>
 <body>
     <h2>시청자 페이지</h2>
+    <!-- 2. viewer에서 영상 안나온 에러 해결 -->
     <video id="remoteVideo" autoplay playsinline muted></video> <!-- muted 추가 : muted가 없으면 Chrome/Edge/Firefox가 자동 재생을 막아서 화면이 안 나올 수 있음 -->
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -37,7 +38,7 @@
         };
 
         // 시청자가 늦게 들어왔을 때 offer 요청
-        socket.emit("requestOffer");
+        socket.emit("requestOffer");            // 2. viewer에서 영상 안나온 에러 해결
 
     </script>
 </body>
