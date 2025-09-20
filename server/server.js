@@ -28,6 +28,13 @@ io.on("connection", (socket) => {
     });
 
     socket.on("requestOffer", () => socket.broadcast.emit("requestOffer"));
+
+    // --- 채팅 메시지 수신 ---
+    socket.on("chatMessage", (msg) => {
+        console.log("chat:", msg);
+        // 모든 클라이언트에게 전달
+        io.emit("chatMessage", {id: socket.id, message: msg});
+    })
 });
 
 server.listen(3000, () => {
